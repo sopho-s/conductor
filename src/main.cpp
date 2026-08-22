@@ -1,21 +1,38 @@
 #include "./imports/tools/src/networking/tcp.h"
 #include "./imports/tinyxml2/tinyxml2.h"
+#include "./config.h"
+#include "server.h"
 #include <iostream>
+
+
 
 int main(int argc, char *argv[]) {
     if (argc > 2) {
         std::string configfilename = std::string(argv[2]);
-        tools::io::File *configfile = static_cast<tools::io::File*>(tools::io::ReadFile(configfilename));
+        auto fileobj = tools::io::ReadFile(configfilename);
+        tools::io::GetFileContents(fileobj);
+        tools::io::File *configfile = static_cast<tools::io::File*>(fileobj);
         tinyxml2::XMLDocument doc;
         doc.Parse(configfile->contents.c_str());
         if (strcmp(argv[1], "server") == 0) {
-            auto serversock = tools::networking::IPv4TCPServerSocket("127.0.0.1", 8080);
-            serversock.Listen();
-            (void)serversock.AcceptNew();
-            std::cout << "client connected" << std::endl;
+            ServerConfig config;
+            auto addr = doc.FirstChildElement("root")->FirstChildElement("addr");
+            config.ip = std::string(addr->FirstChildElement("ip")->GetText());
+            config.port = std::stoul(addr->FirstChildElement("port")->GetText());
+            config.backendident = std::string(doc.FirstChildElement("root")->FirstChildElement("backendident")->GetText());
+            config.encrypted = (std::string(doc.FirstChildElement("root")->FirstChildElement("encrypted")->GetText()) == "true");
+            config.autoswitch = (std::string(doc.FirstChildElement("root")->FirstChildElement("autoswitch")->GetText()) == "true");
+            Server server = Server(config);
+            server.Start();
+            while (true) {
+                ;
+            }
         } else if (strcmp(argv[1], "client") == 0) {
-            auto sock = tools::networking::IPv4TCPClientSocket("127.0.0.1", 8080);
-            sock.Send("test", 4);
+            ClientConfig config;
+            auto addr = doc.FirstChildElement("root")->FirstChildElement("addr");
+            config.ip = std::string(addr->FirstChildElement("ip")->GetText());
+            config.port = std::stoul(addr->FirstChildElement("port")->GetText());
+            config.ident = std::string(doc.FirstChildElement("root")->FirstChildElement("ident")->GetText());
             std::cout << "connected to server" << std::endl;
         }
         delete configfile;

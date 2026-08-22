@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+    <addr>
+        <ip>127.0.0.1</ip>
+        <port>1234</port>
+    </addr>
+    <backendident>fuckyou</backendident>
+    <encrypted>true</encrypted>
+    <autoswitch>true</autoswitch>
+</root>
