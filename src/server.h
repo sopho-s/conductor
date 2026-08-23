@@ -1,6 +1,7 @@
 #include "config.h"
 #include "messagestructs.h"
 #include "./imports/tools/src/networking/tcp.h"
+#include <random>
 #include <thread>
 #pragma once
 
@@ -20,5 +21,7 @@ struct Server {
 };
 
 void ServerNegotiate(Server *server);
+
+void ConnectionManager(tools::networking::IPv4TCPConnection *newconn, const char *keyandid);
 
 void ThreadedStart(Server *server);

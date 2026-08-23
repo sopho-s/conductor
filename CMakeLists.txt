@@ -16,5 +16,5 @@ add_subdirectory(src)
 add_executable(test_conductor test/main.cpp)
 target_link_libraries(test_conductor toollib tinyxml2 Catch2::Catch2WithMain)
 
-add_executable(conductor src/main.cpp src/server.h src/server.cpp src/config.h)
+add_executable(conductor src/main.cpp src/server.h src/server.cpp src/config.h src/client.h src/client.cpp)
 target_link_libraries(conductor tinyxml2 toollib)

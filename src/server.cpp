@@ -37,15 +37,38 @@ const char* ServerNegotiate(tools::networking::IPv4TCPConnection *conn, const Se
     conn->Send((const char*)&message, sizeof(message));
     RSAkeysend keyexchange;
     std::pair<tools::crypto::RSAPublicKey, tools::crypto::RSAPrivateKey> keypair = tools::crypto::RSAGenerateKeyPair(7919, 1009);
-    tools::crypto::RSAPublicKey public = keypair.first;
-    tools::crypto::RSAPrivateKey private = keypair.second;
-    keyexchange.key = public;
+    tools::crypto::RSAPublicKey _public = keypair.first;
+    tools::crypto::RSAPrivateKey _private = keypair.second;
+    keyexchange.key = _public;
     conn->Send((const char*)&keyexchange, sizeof(keyexchange));
+    unsigned char* response = conn->Receive(sizeof(AESkeysend));
+    tools::crypto::RSADecrypt<unsigned char>(*response, _private);
+    AESkeysend aeskeysend;
+    memcpy(&aeskeysend, response, sizeof(AESkeysend));
+    unsigned char key[16];
+    memcpy(key, aeskeysend.key, 16);
+    giveid idmessage;
+    idmessage.challengeresponse = aeskeysend.challenge;
+    for (int i = 0; i < 4; i++) {
+        uint32_t tmp = rand();
+        memcpy(idmessage.id + i * 4, &tmp, sizeof(uint32_t));
+    }
+    conn->Send((const char*)&idmessage, sizeof(giveid));
+    unsigned char ret[32];
+    memcpy(ret, idmessage.id, 16);
+    memcpy(ret + 16, aeskeysend.key, 16);
+    return nullptr;
+}
 
+void ConnectionManager(tools::networking::IPv4TCPConnection *newconn, const char* keyandid) {
+    
 }
 
 void ThreadedStart(Server *server) {
-    int fd = server->AcceptNew();
-    tools::networking::IPv4TCPConnection connection(fd);
-    Negotiate(&connection, server->GetConfig());
+    while (true) {
+        int fd = server->AcceptNew();
+        tools::networking::IPv4TCPConnection *connection = new tools::networking::IPv4TCPConnection(fd);
+        const char* keyandid = ServerNegotiate(connection, server->GetConfig());
+        std::thread thread = std::thread(ConnectionManager, connection, keyandid);
+    }
 }
