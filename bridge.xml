@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+    <myaddr>
+        <ip>0.0.0.0</ip>
+        <port>1234</port>
+    </myaddr>
+    <addresses>
+        <addr>
+            <ip>0.0.0.0</ip>
+            <port>1234</port>
+        </addr>
+    </addresses>
+    <ident>bridgymcbridgeface</ident>
+</root>

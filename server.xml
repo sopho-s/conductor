@@ -4,7 +4,9 @@
         <ip>127.0.0.1</ip>
         <port>1234</port>
     </addr>
+    <musicianident>musician</musicianident>
     <backendident>fuckyou</backendident>
+    <bridgeident>bridgymcbridgeface</bridgeident>
     <encrypted>true</encrypted>
     <autoswitch>true</autoswitch>
 </root>

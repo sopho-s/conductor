@@ -1,5 +1,6 @@
 #include "config.h"
 #include "messagestructs.h"
+#include "encryptednetworking.h"
 #include "./imports/tools/src/networking/tcp.h"
 #include <random>
 #include <thread>
@@ -20,8 +21,7 @@ struct Server {
         const ServerConfig& GetConfig();
 };
 
-void ServerNegotiate(Server *server);
+unsigned char*  ServerNegotiate(Server *server);
 
-void ConnectionManager(tools::networking::IPv4TCPConnection *newconn, const char *keyandid);
-
+void ConnectionManager(tools::networking::IPv4TCPConnection *newconn, unsigned char* keyandid, const ServerConfig config);
 void ThreadedStart(Server *server);

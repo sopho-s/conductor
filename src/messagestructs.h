@@ -2,7 +2,7 @@
 #include "./imports/tools/src/crypto.h"
 #pragma once
 
-struct negotation {
+struct negotiation {
     uint16_t version;
     uint8_t error;
     bool isencrypted;
@@ -23,6 +23,12 @@ struct giveid {
     unsigned char id[16];
 };
 
+struct giveident {
+    unsigned int size;
+    unsigned char id[16];
+    unsigned char* ident;
+};
+
 struct login {
     unsigned char id[16];
     uint32_t otp;
@@ -34,7 +40,7 @@ struct giveinterfaceip {
 };
 
 struct messages {
+    unsigned int size;
     unsigned char id[16];
-    uint32_t size;
     unsigned char* message;
 };

@@ -13,8 +13,11 @@ FetchContent_MakeAvailable(Catch2)
 
 add_subdirectory(src)
 
+FILE(GLOB Hfiles ./src/*.h)
+FILE(GLOB CPPfiles ./src/*.cpp)
+
 add_executable(test_conductor test/main.cpp)
 target_link_libraries(test_conductor toollib tinyxml2 Catch2::Catch2WithMain)
 
-add_executable(conductor src/main.cpp src/server.h src/server.cpp src/config.h src/client.h src/client.cpp)
+add_executable(conductor ${CPPfiles} ${Hfiles})
 target_link_libraries(conductor tinyxml2 toollib)
