@@ -5,7 +5,7 @@
         <port>1234</port>
     </addr>
     <musicianident>musician</musicianident>
-    <backendident>fuckyou</backendident>
+    <backendident>musicianident</backendident>
     <bridgeident>bridgymcbridgeface</bridgeident>
     <encrypted>true</encrypted>
     <autoswitch>true</autoswitch>
